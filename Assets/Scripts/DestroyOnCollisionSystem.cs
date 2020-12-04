@@ -19,15 +19,14 @@ public class DestroyOnCollisionSystem : SystemBase
         _stepPhysicsWorld = World.GetOrCreateSystem<StepPhysicsWorld>();
     }
 
-    public struct DestroyOnCollision : ITriggerEventsJob
+    public struct DestroyOnCollision : ICollisionEventsJob
     {
         public EntityCommandBuffer _commandBuffer;
-        
-        
-        public void Execute(TriggerEvent triggerEvent)
+
+        public void Execute(CollisionEvent collisionEvent)
         {
-            _commandBuffer.DestroyEntity(triggerEvent.EntityA);
-            _commandBuffer.DestroyEntity(triggerEvent.EntityB);
+            _commandBuffer.DestroyEntity(collisionEvent.EntityA);
+            _commandBuffer.DestroyEntity(collisionEvent.EntityB);
         }
     }
 
