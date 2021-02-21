@@ -38,6 +38,6 @@ public class StepperMovementSystem : SystemBase
 
             translation.Value += new float3(movement.StartDirection * direction * movement.StepLength, 0, 0);
             
-        }).Schedule();
+        }).ScheduleParallel();
     }
 }

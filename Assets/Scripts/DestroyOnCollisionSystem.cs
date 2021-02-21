@@ -8,6 +8,7 @@ public class DestroyOnCollisionSystem : SystemBase
     private EndSimulationEntityCommandBufferSystem _commandBufferSystem;
     
     
+    
     protected override void OnCreate()
     {
         base.OnCreate();
@@ -21,12 +22,12 @@ public class DestroyOnCollisionSystem : SystemBase
 
     public struct DestroyOnCollision : ICollisionEventsJob
     {
-        public EntityCommandBuffer _commandBuffer;
+        public EntityCommandBuffer CommandBuffer;
 
         public void Execute(CollisionEvent collisionEvent)
         {
-            _commandBuffer.DestroyEntity(collisionEvent.EntityA);
-            _commandBuffer.DestroyEntity(collisionEvent.EntityB);
+            CommandBuffer.AddComponent<Dead>(collisionEvent.EntityA);
+            CommandBuffer.AddComponent<Dead>(collisionEvent.EntityB);
         }
     }
 
@@ -53,7 +54,7 @@ public class DestroyOnCollisionSystem : SystemBase
 
         var a = new DestroyOnCollision()
         {
-            _commandBuffer = commandBuffer
+            CommandBuffer = commandBuffer
         };
 
 

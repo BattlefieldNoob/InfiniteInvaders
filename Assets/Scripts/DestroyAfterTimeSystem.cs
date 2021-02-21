@@ -2,16 +2,14 @@
 
 public class DestroyAfterTimeSystem : SystemBase
 {
-    
-    private EndSimulationEntityCommandBufferSystem _commandBufferSystem;
-    
-    
+    private EndFixedStepSimulationEntityCommandBufferSystem _commandBufferSystem;
+
     protected override void OnCreate()
     {
         base.OnCreate();
         // Find the ECB system once and store it for later usage
         _commandBufferSystem = World
-            .GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>();
+            .GetOrCreateSystem<EndFixedStepSimulationEntityCommandBufferSystem>();
     }
 
     protected override void OnUpdate()
@@ -28,10 +26,11 @@ public class DestroyAfterTimeSystem : SystemBase
         // types you want.
 
         var commandBuffer = _commandBufferSystem.CreateCommandBuffer();
-        
+
         var actualTime = Time.ElapsedTime;
-        
-        Entities.ForEach((in Entity entity,in DestroyAfterTime destroyAfterTime) => {
+
+        Entities.WithNone<Dead>().ForEach((in Entity entity, in DestroyAfterTime destroyAfterTime) =>
+        {
             // Implement the work to perform for each entity here.
             // You should only access data that is local or that is a
             // field on this job. Note that the 'rotation' parameter is
@@ -40,13 +39,12 @@ public class DestroyAfterTimeSystem : SystemBase
             // that want to read Rotation component data.
             // For example,
             //     translation.Value += math.mul(rotation.Value, new float3(0, 0, 1)) * deltaTime;
-            
+
             if (actualTime - destroyAfterTime.BirthTime < destroyAfterTime.CountDown) return;
-            
-            commandBuffer.DestroyEntity(entity);
-            
+
+            commandBuffer.AddComponent<Dead>(entity);
         }).Schedule();
-        
+
         _commandBufferSystem.AddJobHandleForProducer(Dependency);
     }
 }

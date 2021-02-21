@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1203289264607199474}
   - component: {fileID: 1968732593}
   - component: {fileID: 5011999419035123053}
+  - component: {fileID: 1243965794327210421}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -60,8 +61,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65f482a9c1977d24aabe41f82f9c74b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StepLength: 1
-  MoveCoolDown: 2
+  StepLength: 0.75
+  MoveCoolDown: 1
   StartDirection: 1
 --- !u!114 &1968732593
 MonoBehaviour:
@@ -218,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccea9ea98e38942e0b0938c27ed1903e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MotionType: 0
+  m_MotionType: 1
   m_Smoothing: 0
   m_Mass: 1
   m_LinearDamping: 0.01
@@ -256,6 +257,18 @@ MonoBehaviour:
     Tag05: 0
     Tag06: 0
     Tag07: 0
+--- !u!114 &1243965794327210421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205478495551418228}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208859dba23332e4ca83325344d227dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2939764964247032794
 GameObject:
   m_ObjectHideFlags: 0
@@ -307,6 +320,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
