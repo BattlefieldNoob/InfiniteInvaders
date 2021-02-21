@@ -48,9 +48,9 @@
         },
         {
             "$type": "Unity.Build.Web.DotsRuntime.WasmOutputSettings, Unity.Build.Web.DotsRuntime",
-            "OutputSingleHTMLFile": true,
+            "OutputSingleHTMLFile": false,
             "MinifyHTMLFile": true,
-            "MinifyOutputWithClosure": true,
+            "MinifyOutputWithClosure": false,
             "EmbedCpuProfiler": false,
             "EmbedMemoryProfiler": false,
             "IncludeSymbolsForBrowserCallstacks": false,
