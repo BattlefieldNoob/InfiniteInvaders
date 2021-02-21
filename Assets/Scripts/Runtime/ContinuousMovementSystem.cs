@@ -1,20 +1,10 @@
 ﻿using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Transforms;
-using UnityEngine;
+using Unity.Tiny.Input;
 
-public class PlayerSystem : SystemBase
+public class ContinuousMovementSystem : SystemBase
 {
-    private BeginSimulationEntityCommandBufferSystem _commandBufferSystem;
-    
-    
-    protected override void OnCreate()
-    {
-        base.OnCreate();
-        // Find the ECB system once and store it for later usage
-        _commandBufferSystem = World
-            .GetOrCreateSystem<BeginSimulationEntityCommandBufferSystem>();
-    }
-    
     protected override void OnUpdate()
     {
         // Assign values to local variables captured in your job here, so that it has
@@ -28,14 +18,24 @@ public class PlayerSystem : SystemBase
         // Translation and Rotation components. Change it to process the component
         // types you want.
 
-        var commandBuffer = _commandBufferSystem.CreateCommandBuffer();
+        var deltaTime = Time.DeltaTime;
 
-        var actualTime = Time.ElapsedTime;
+        var game = GetSingleton<Game>();
+        
+        var Input = World.GetExistingSystem<InputSystem>();
 
-        var attackPressed = Input.GetKey(KeyCode.Space);
+        var horizontal = 0;
 
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
+        {
+            horizontal = -1;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
+        {
+            horizontal = 1;
+        }
 
-        Entities.ForEach((ref Player player,in Translation playerPos) =>
+        Entities.ForEach((ref Translation translation, in ContinuousMovement movement) =>
         {
             // Implement the work to perform for each entity here.
             // You should only access data that is local or that is a
@@ -46,19 +46,10 @@ public class PlayerSystem : SystemBase
             // For example,
             //     translation.Value += math.mul(rotation.Value, new float3(0, 0, 1)) * deltaTime;
 
-            if (actualTime - player.LastAttackTime < player.AttackCoolDown) return;
+            var newValue = translation.Value.x + (horizontal * deltaTime * movement.Speed);
 
-            if (!attackPressed) return;
-
-            player.LastAttackTime = actualTime;
-
-            var bullet=commandBuffer.Instantiate(player.bullet);
-            
-            commandBuffer.SetComponent(bullet,new Translation{Value = playerPos.Value});
-            commandBuffer.SetComponent(bullet,new DestroyAfterTime(){BirthTime = actualTime,CountDown = 2});
-
+            translation.Value =
+                new float3(math.clamp(newValue, -game.GameLimits, game.GameLimits), translation.Value.yz);
         }).Schedule();
-        
-        _commandBufferSystem.AddJobHandleForProducer(Dependency);
     }
 }
