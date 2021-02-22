@@ -1,0 +1,119 @@
+on:
+  push:
+    branches:
+      - testing-ci-cd
+
+name: Github_Builder
+
+env: 
+  NAME: ${{ github.event.repository.name }}
+
+jobs:
+
+  checkout_and_clean:
+    name: Checkout and clean
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        lfs: true
+        clean: false
+        fetch-depth: 0
+
+    - name: Cache Library
+      uses: actions/cache@v2.1.4
+      with:
+        path: |
+          Library
+        key: ${{ runner.os }}
+
+    - name: Cleanup
+      run: |
+        rm -f -r Builds
+        
+  unity_install:
+    name: Unity Install
+    runs-on: macos-latest
+    needs: checkout_and_clean
+    steps:
+
+
+    - name: Install UVM
+      run: |
+        brew tap wooga/tools
+        brew install unity-version-manager
+
+
+    - name: Extract Unity version
+      id: unity_version_extract
+      run: |
+       echo "::set-output name=UNITY_VERSION::$(uvm detect)"
+
+    - name: Install Unity
+      run: |
+        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+       
+    - name: Select Unity Version
+      run: |
+        uvm clear
+        uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        
+  build:
+    runs-on: self-hosted
+    needs: unity_install
+      
+    strategy:
+      matrix:
+        platform: [StandaloneOSX"]
+
+    steps:
+    
+    - name: Unity Build
+      run: |
+        /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
+          -projectPath ./ -buildTarget ${{matrix.platform}}
+    
+    - name: Compress Build
+      if: false
+      run: |
+        rm -f ${{ env.NAME }}_${{ matrix.platform }}.zip
+        cd Builds/${{matrix.platform}} && zip -r -X ../../${{ env.NAME }}_${{matrix.platform}}.zip .
+  
+  deploy:
+    if: false
+    runs-on: macos-latest
+    needs: build
+    steps:
+    - name: Create Release
+      uses: actions/create-release@v1
+      id: create_release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: build-${{ github.run_number }}
+        release_name: ${{ env.NAME }}
+        body: |
+          New Version!
+        prerelease: true
+        
+    - name: Upload Release Asset WebGL
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./${{ env.NAME }}_WebGL.zip
+        asset_name: ${{ env.NAME }}_WebGL.zip
+        asset_content_type: application/zip
+        
+    - name: Upload Release Asset Windows
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+        asset_path: ./${{ env.NAME }}_StandaloneWindows64.zip
+        asset_name: ${{ env.NAME }}_Win.zip
+        asset_content_type: application/zip
