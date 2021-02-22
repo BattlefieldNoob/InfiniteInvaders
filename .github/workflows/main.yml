@@ -51,7 +51,6 @@ jobs:
        
     - name: Select Unity Version
       run: |
-        uvm clear
         uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
     
     - name: Unity Build
