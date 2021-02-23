@@ -43,7 +43,7 @@ jobs:
         UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
       with:
         # Path to a Namespace.Class.StaticMethod to run to perform the build.
-        buildMethod: BuildConfigManager.BuildCurrentPlatform
+        buildMethod: BuildConfigsManager.BuildCurrentPlatform
 
     
     - name: Compress Build
