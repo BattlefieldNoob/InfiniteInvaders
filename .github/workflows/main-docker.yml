@@ -12,9 +12,8 @@ env:
 jobs:
 
   build:
-    if: false
     name: Build
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout
@@ -35,33 +34,17 @@ jobs:
       run: |
         rm -f -r Builds
         
-    - name: Install UVM
-      run: |
-        brew tap wooga/tools
-        brew install unity-version-manager
-
-
-    - name: Extract Unity version
-      id: unity_version_extract
-      run: |
-       echo "::set-output name=UNITY_VERSION::$(uvm detect)"
-
-    - name: Install Unity
-      run: |
-        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
-       
-    - name: Select Unity Version
-      run: |
-        uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
     
-    - name: Create License File
-      run: |
-        echo "${{ secrets.UNITY_LICENSE }}" > license.ulf
-    
-    - name: Unity Build
-      run: |
-        /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
-          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile license.ulf
+    - name: Unity - Builder
+      # You may pin to the exact commit or the version.
+      # uses: game-ci/unity-builder@c8202c01e7dfe4de0e897b26cb2ca1cc363e4ad4
+      uses: game-ci/unity-builder@v2.0-alpha-6
+      env:
+        UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+      with:
+        # Path to a Namespace.Class.StaticMethod to run to perform the build.
+        buildMethod: BuildConfigManager.BuildCurrentPlatform
+
     
     - name: Compress Build
       if: false
