@@ -449,6 +449,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "odinserializer": {
+      "version": "file:OdinSerializer",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.modules.androidjni": {
       "version": "1.0.0",
       "depth": 0,
