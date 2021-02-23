@@ -53,10 +53,14 @@ jobs:
       run: |
         uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
     
+    - name: Create License File
+      run: |
+        echo "${{ secrets.UNITY_LICENSE }}" > license.ulf
+    
     - name: Unity Build
       run: |
         /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
-          -projectPath ./ -buildTarget StandaloneOSX
+          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile license.ulf
     
     - name: Compress Build
       if: false
