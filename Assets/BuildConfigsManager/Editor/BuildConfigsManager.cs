@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Build;
 using UnityEditor;
 using UnityEngine;
 
@@ -51,10 +52,14 @@ public class BuildConfigsManager : MonoBehaviour
             if (buildConfig == null)
             {
                 Debug.Log("BUILD CONFIG NULL!");
-                continue;
             }
-            Debug.Log("FORRRRRRRRRRRRRRRRRR");
-            var result = buildConfig.Build();
+            
+            var buildConfi =
+                AssetDatabase.LoadAssetAtPath<BuildConfiguration>(
+                    "Assets/BuildConfig/WebGLDots.buildconfiguration");
+            
+            Debug.Log("USING CUSTOM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            var result = buildConfi.Build();
             
             Debug.Log("FOR RESULT"+result);
         }
