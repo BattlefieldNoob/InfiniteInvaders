@@ -48,8 +48,14 @@ public class BuildConfigsManager : MonoBehaviour
         
         foreach (var buildConfig in buildConfigs)
         {
+            if (buildConfig == null)
+            {
+                Debug.Log("BUILD CONFIG NULL!");
+                continue;
+            }
             Debug.Log("FORRRRRRRRRRRRRRRRRR");
             var result = buildConfig.Build();
+            
             Debug.Log("FOR RESULT"+result);
         }
 
