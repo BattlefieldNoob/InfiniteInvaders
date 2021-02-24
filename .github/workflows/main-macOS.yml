@@ -35,7 +35,7 @@ jobs:
         rm -f -r Builds
         
     
-   - name: Unity Build
+    - name: Unity Build
       run: |
         /Applications/Unity/Hub/Editor/2020.2.2f1/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
           -projectPath ./ -buildTarget StandaloneOSX -executeMethod BuildConfigsManager.BuildCurrentPlatform
