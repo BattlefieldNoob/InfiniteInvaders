@@ -23,13 +23,6 @@ jobs:
         clean: false
         fetch-depth: 0
 
-    - name: Cache Library
-      uses: actions/cache@v2.1.4
-      with:
-        path: |
-          Library
-        key: ${{ runner.os }}
-
     - name: Cleanup
       run: |
         rm -f -r Builds
