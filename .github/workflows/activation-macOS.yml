@@ -55,6 +55,6 @@ jobs:
       uses: actions/upload-artifact@v1
       with:
         name: "license.alf"
-        path: $HOME/Unity_v2020.2.2f1.alf
+        path: ./Unity_v2020.2.2f1.alf
   
 
