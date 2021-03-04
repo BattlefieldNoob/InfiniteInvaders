@@ -38,6 +38,7 @@ jobs:
     - name: Prepare PATH
       run: |
         echo "$GITHUB_WORKSPACE/unity-version-manager/bin" >> $GITHUB_PATH
+        chmod -R 755 $GITHUB_WORKSPACE/unity-version-manager
         echo $GITHUB_PATH
 
 
