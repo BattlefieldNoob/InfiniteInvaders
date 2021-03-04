@@ -40,6 +40,7 @@ jobs:
 
     
     - name: Unity Create Activation file
+      continue-on-error: true
       run: |
         /Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -nographics -quit -createManualActivationFile -logfile
 
