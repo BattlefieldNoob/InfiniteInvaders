@@ -90,19 +90,17 @@ jobs:
         with:
           name: webgl-build
           
-      - name: 'Echo download path'
-        run: echo ${{steps.download.outputs.download-path}}
-        
-      - name: LS
-        run: |
-          ls .
-          ls $GITHUB_WORKSPACE
-          
       - name: unzip
         run: |
           unzip ${{ env.NAME }}_WEBGL.zip -d public
           ls .
           ls $GITHUB_WORKSPACE
+
+      - name: Deploy setup
+        run: |
+          ls ./public
+          mv ./public/InfiniteInvaders.html ./public/index.html
+          ls ./public
           
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
