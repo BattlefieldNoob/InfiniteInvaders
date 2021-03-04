@@ -7,7 +7,7 @@ name: Github_Builder
 
 env: 
   NAME: ${{ github.event.repository.name }}
-
+  UVM_PATH: ./unity-version-manager/bin/uvm
 
 jobs:
 
@@ -35,33 +35,32 @@ jobs:
       run: |
         rm -f -r Builds
         
-    - name: Install UVM
-      run: |
-        brew tap wooga/tools
-        brew install unity-version-manager
-
+    #- name: Install UVM
+    #  run: |
+    #    brew tap wooga/tools
+    #    brew install unity-version-manager
 
     - name: Extract Unity version
       id: unity_version_extract
       run: |
-       echo "::set-output name=UNITY_VERSION::$(uvm detect)"
+       echo "::set-output name=UNITY_VERSION::$(UVM_PATH detect)"
 
     - name: Install Unity
       run: |
-        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        UVM_PATH install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
        
     - name: Select Unity Version
       run: |
-        uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        UVM_PATH use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
     
     - name: Create License File
       run: |
-        echo "${{ secrets.UNITY_LICENSE }}" > license.ulf
+        echo "${{ secrets.UNITY_LICENSE }}" > ./license.ulf
     
     - name: Unity Build
       run: |
         /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
-          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile license.ulf
+          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile ./license.ulf
     
     - name: Compress Build
       if: false
