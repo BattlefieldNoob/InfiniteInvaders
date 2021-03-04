@@ -7,7 +7,6 @@ name: Github_Builder
 
 env: 
   NAME: ${{ github.event.repository.name }}
-  UVM_PATH: ./unity-version-manager/bin/uvm
 
 jobs:
 
@@ -62,15 +61,16 @@ jobs:
       run: |
         uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
     
-    - name: Create License File
-      run: |
-        echo "${{ secrets.UNITY_LICENSE }}" > ./license.ulf
-        chmod 777 ./license.ulf
+    #- name: Create License File
+    #  run: |
+    #    echo "${{ secrets.UNITY_LICENSE }}" > ./license.ulf
+    #    chmod 777 ./license.ulf
     
     - name: Unity Build
       run: |
+        chmod 777 ./license/Unity.ulf
         /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
-          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile ./license.ulf -executeMethod BuildConfigsManager.BuildCurrentPlatform
+          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile ./license/Unity.ulf -executeMethod BuildConfigsManager.BuildCurrentPlatform
     
     - name: Compress Build
       if: false
