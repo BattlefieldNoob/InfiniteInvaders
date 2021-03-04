@@ -70,7 +70,7 @@ jobs:
       run: |
         chmod 777 ./license/Unity.ulf
         /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
-          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile ./license/Unity.ulf -executeMethod BuildConfigsManager.BuildCurrentPlatform
+          -projectPath ./ -buildTarget StandaloneOSX -executeMethod BuildConfigsManager.BuildCurrentPlatform -username ${{ secrets.UNITY_EMAIL }} -password ${{ secrets.UNITY_PASSWORD }} -serial ${{ secrets.UNITY_SERIAL }}
     
     - name: Compress Build
       if: false
