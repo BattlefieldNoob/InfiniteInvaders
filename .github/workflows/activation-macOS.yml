@@ -41,7 +41,7 @@ jobs:
     
     - name: Unity Create Activation file
       run: |
-        /Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -createManualActivationFile -logfile
+        /Applications/Unity/Unity.app/Contents/MacOS/Unity -batchmode -nographics -quit -createManualActivationFile -logfile
 
     - name: Print
       run: |
