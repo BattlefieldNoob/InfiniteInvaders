@@ -54,7 +54,7 @@ jobs:
 
     - name: Install Unity
       run: |
-        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} -m visualstudio /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        sudo uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} -m visualstudio /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
         mkdir /Library/Application\ Support/Unity
         chmod -R 777 /Library/Application\ Support/Unity
        
