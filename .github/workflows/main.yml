@@ -61,15 +61,14 @@ jobs:
       run: |
         uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
     
-    #- name: Create License File
-    #  run: |
-    #    echo "${{ secrets.UNITY_LICENSE }}" > ./license.ulf
-    #    chmod 777 ./license.ulf
-    
     - name: Unity Build
       run: |
         /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
           -projectPath ./ -buildTarget StandaloneOSX -executeMethod BuildConfigsManager.BuildCurrentPlatform -username ${{ secrets.UNITY_EMAIL }} -password ${{ secrets.UNITY_PASSWORD }} -serial ${{ secrets.UNITY_SERIAL }}
+    
+    - name: Unity Return License
+      run: |
+        /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile -returnlicense
     
     - name: Compress Build
       run: |
@@ -93,6 +92,23 @@ jobs:
           
       - name: 'Echo download path'
         run: echo ${{steps.download.outputs.download-path}}
+        
+      - name: LS
+        run: |
+          ls .
+          ls $GITHUB_WORKSPACE
+          
+      - name: unzip
+        run: |
+          unzip ${{ env.NAME }}_WEBGL.zip -d public
+          ls .
+          ls $GITHUB_WORKSPACE
+          
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
     
     
   
