@@ -73,7 +73,7 @@ jobs:
     - name: Compress Build
       run: |
         rm -f ${{ env.NAME }}_WEBGL.zip
-        cd Builds/tiny3d-webgldots && zip -r -X ../../${{ env.NAME }}_WEBGL.zip .
+        cd Builds/${{ env.NAME }}-webgldots && zip -r -X ../../${{ env.NAME }}_WEBGL.zip .
         
     - uses: actions/upload-artifact@v2
       with:
