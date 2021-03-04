@@ -34,6 +34,13 @@ jobs:
       run: |
         rm -f -r Builds
         
+
+    - name: Prepare PATH
+      run: |
+        echo "$GITHUB_WORKSPACE/unity-version-manager/bin" >> $GITHUB_PATH
+        echo $GITHUB_PATH
+
+
     #- name: Install UVM
     #  run: |
     #    brew tap wooga/tools
@@ -42,15 +49,15 @@ jobs:
     - name: Extract Unity version
       id: unity_version_extract
       run: |
-       echo "::set-output name=UNITY_VERSION::$(UVM_PATH detect)"
+       echo "::set-output name=UNITY_VERSION::$(uvm detect)"
 
     - name: Install Unity
       run: |
-        UVM_PATH install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
        
     - name: Select Unity Version
       run: |
-        UVM_PATH use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        uvm use ${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
     
     - name: Create License File
       run: |
