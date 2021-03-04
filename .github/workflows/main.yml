@@ -12,7 +12,6 @@ env:
 jobs:
 
   build:
-    if: false
     name: Build
     runs-on: macos-latest
     
