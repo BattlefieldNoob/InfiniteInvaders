@@ -54,9 +54,9 @@ jobs:
 
     - name: Install Unity
       run: |
-        sudo uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
-        mkdir /Library/Application\ Support/Unity
-        chmod -R 777 /Library/Application\ Support/Unity
+        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        sudo mkdir /Library/Application\ Support/Unity
+        sudo chmod -R 777 /Library/Application\ Support/Unity
        
     - name: Select Unity Version
       run: |
