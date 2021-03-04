@@ -54,7 +54,9 @@ jobs:
 
     - name: Install Unity
       run: |
-        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        uvm install2 -v ${{ steps.unity_version_extract.outputs.UNITY_VERSION }} -m visualstudio /Applications/UnityInstalls/${{ steps.unity_version_extract.outputs.UNITY_VERSION }}
+        mkdir /Library/Application\ Support/Unity
+        chmod -R 777 /Library/Application\ Support/Unity
        
     - name: Select Unity Version
       run: |
@@ -63,11 +65,12 @@ jobs:
     - name: Create License File
       run: |
         echo "${{ secrets.UNITY_LICENSE }}" > ./license.ulf
+        chmod 777 ./license.ulf
     
     - name: Unity Build
       run: |
         /Applications/Unity/Unity.app/Contents/MacOS/Unity -quit -batchmode -nographics -logFile \
-          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile ./license.ulf
+          -projectPath ./ -buildTarget StandaloneOSX -manualLicenseFile ./license.ulf -executeMethod BuildConfigsManager.BuildCurrentPlatform
     
     - name: Compress Build
       if: false
