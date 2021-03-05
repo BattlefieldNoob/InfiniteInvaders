@@ -31,21 +31,31 @@ public class BuildConfigSettingProvider : SettingsProvider
     public override void OnActivate(string searchContext, VisualElement rootElement)
     {
         _settings = BuildSettings.GetOrCreateSettings();
-        foreach (var keyValuePair in _settings.configsByTarget)
+
+        var targets = new[]
+        {
+            BuildTarget.WebGL,
+            BuildTarget.StandaloneWindows64,
+            BuildTarget.StandaloneOSX
+        };
+
+        foreach (var t in targets)
         {
             var target = new VisualElement();
-            target.Add(new Label(keyValuePair.Key.ToString()));
+            target.Add(new Label(t.ToString()));
+            var configs = _settings.GetConfigsByTarget(t);
+            
             var config = new ObjectField("default config")
             {
                 objectType = typeof(BuildConfiguration), allowSceneObjects = false,
-                value = keyValuePair.Value.FirstOrDefault()
+                value = configs.FirstOrDefault()
             };
 
             config.RegisterValueChangedCallback(evt =>
             {
                 if (evt.newValue is BuildConfiguration buildConfiguration)
                 {
-                    _settings.configsByTarget[keyValuePair.Key] = new[] {buildConfiguration};
+                    _settings.SetConfigsForTarget(t, new[] {buildConfiguration});
                 }
             });
             target.Add(config);
