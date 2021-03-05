@@ -33,7 +33,7 @@ jobs:
       run: |
         rm -f -r Builds
         
-   - name: Unity - Builder
+    - name: Unity - Builder
       # You may pin to the exact commit or the version.
       # uses: game-ci/unity-builder@c8202c01e7dfe4de0e897b26cb2ca1cc363e4ad4
       uses: game-ci/unity-builder@v2.0-alpha-6
