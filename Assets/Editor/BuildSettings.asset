@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BuildSettings
   m_EditorClassIdentifier: 
   WebGLConfigs:
-  - f913188c351cfc4488f3a2fdedd1f1da
+  - {fileID: 93214019566545601, guid: f913188c351cfc4488f3a2fdedd1f1da, type: 3}
   WindowsConfigs:
-  - f454063430f654346939ae06888bef4d
+  - {fileID: 93214019566545601, guid: f454063430f654346939ae06888bef4d, type: 3}
   MacOSConfigs: []

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Unity.Build;
 using UnityEditor;
 using UnityEngine;
@@ -9,9 +8,54 @@ public class BuildSettings : ScriptableObject
 {
     public const string k_BuildSettingsPath = "Assets/Editor/BuildSettings.asset";
 
-    public string[] WebGLConfigs = new string[0];
-    public string[] WindowsConfigs = new string[0];
-    public string[] MacOSConfigs = new string[0];
+    public BuildConfiguration[] WebGLConfigs = new BuildConfiguration[0];
+    public BuildConfiguration[] WindowsConfigs = new BuildConfiguration[0];
+    public BuildConfiguration[] MacOSConfigs = new BuildConfiguration[0];
+
+
+    public bool ContainsKey(BuildTarget key)
+    {
+        switch (key)
+        {
+            case BuildTarget.StandaloneOSX:
+            case BuildTarget.StandaloneWindows64:
+            case BuildTarget.WebGL:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public BuildConfiguration[] this[BuildTarget key]
+    {
+        get
+        {
+            return key switch
+            {
+                BuildTarget.StandaloneOSX => MacOSConfigs,
+                BuildTarget.StandaloneWindows64 => WindowsConfigs,
+                BuildTarget.WebGL => WebGLConfigs,
+                _ => throw new ArgumentOutOfRangeException(nameof(key), key, null)
+            };
+        }
+        set
+        {
+            switch (key)
+            {
+                case BuildTarget.StandaloneOSX:
+                    MacOSConfigs = value;
+                    break;
+                case BuildTarget.StandaloneWindows64:
+                    WindowsConfigs = value;
+                    break;
+                case BuildTarget.WebGL:
+                    WebGLConfigs = value;
+                    break;
+                default: throw new ArgumentOutOfRangeException(nameof(key), key, null);
+            }
+        }
+    }
+
 
     public static BuildSettings GetOrCreateSettings()
     {
@@ -31,56 +75,10 @@ public class BuildSettings : ScriptableObject
         return new SerializedObject(GetOrCreateSettings());
     }
 
-    public BuildConfiguration[] GetConfigsByTarget(BuildTarget target)
-    {
-        var data = target switch
-        {
-            BuildTarget.StandaloneOSX => MacOSConfigs,
-            BuildTarget.StandaloneWindows64 => WindowsConfigs,
-            BuildTarget.WebGL => WebGLConfigs,
-            _ => throw new ArgumentOutOfRangeException(nameof(target), target, null)
-        };
-
-        //configs GUID are saved into Dictionary
-        return data.Select(AssetDatabase.GUIDToAssetPath)
-            .Select(AssetDatabase.LoadAssetAtPath<BuildConfiguration>).ToArray();
-    }
-
-    public void SetConfigsForTarget(BuildTarget target, BuildConfiguration[] configurations)
-    {
-        var data = configurations.Select(AssetDatabase.GetAssetPath)
-            .Select(AssetDatabase.AssetPathToGUID).ToArray();
-
-        switch (target)
-        {
-            case BuildTarget.StandaloneOSX:
-                MacOSConfigs = data;
-                break;
-            case BuildTarget.StandaloneWindows64:
-                WindowsConfigs = data;
-                break;
-            case BuildTarget.WebGL:
-                WebGLConfigs = data;
-                break;
-            default: throw new ArgumentOutOfRangeException(nameof(target), target, null);
-        }
-    }
-
-    public bool IsTargetSupported(BuildTarget target)
-    {
-        switch (target)
-        {
-            case BuildTarget.StandaloneOSX:
-            case BuildTarget.StandaloneWindows64:
-            case BuildTarget.WebGL:
-                return true;
-            default:
-                return false;
-        }
-    }
 
     public void Save()
     {
+        Debug.Log("SAVING!");
         EditorUtility.SetDirty(this);
         AssetDatabase.SaveAssets();
     }

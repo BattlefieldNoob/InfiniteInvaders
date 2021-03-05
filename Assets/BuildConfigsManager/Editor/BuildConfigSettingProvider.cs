@@ -43,8 +43,8 @@ public class BuildConfigSettingProvider : SettingsProvider
         {
             var target = new VisualElement();
             target.Add(new Label(t.ToString()));
-            var configs = _settings.GetConfigsByTarget(t);
-            
+            var configs = _settings[t];
+
             var config = new ObjectField("default config")
             {
                 objectType = typeof(BuildConfiguration), allowSceneObjects = false,
@@ -55,7 +55,7 @@ public class BuildConfigSettingProvider : SettingsProvider
             {
                 if (evt.newValue is BuildConfiguration buildConfiguration)
                 {
-                    _settings.SetConfigsForTarget(t, new[] {buildConfiguration});
+                    _settings[t] = new[] {buildConfiguration};
                 }
             });
             target.Add(config);

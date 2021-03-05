@@ -55,10 +55,10 @@ public class BuildConfigsManager : MonoBehaviour
         Debug.Log("before GetSettings");
         var config = BuildSettings.GetOrCreateSettings();
         Debug.Log("after GetSettings");
-        if (!config.IsTargetSupported(target))
+        if (!config.ContainsKey(target))
             return false;
         Debug.Log("CONTAINS!");
-        var buildConfigs = config.GetConfigsByTarget(target);
+        var buildConfigs = config[target];
         Debug.Log("building:" + buildConfigs);
         if (buildConfigs.Length == 0)
             return false;
